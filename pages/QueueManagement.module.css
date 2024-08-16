@@ -1,0 +1,166 @@
+/* components/QueueManagement.module.css */
+.container {
+   font-family: Arial, sans-serif;
+   max-width: 1200px;
+   margin: 0 auto;
+}
+
+.header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   background-color: #003366;
+   color: white;
+   padding: 10px 20px;
+}
+
+.logo {
+   height: 40px;
+}
+
+.userInfo {
+   display: flex;
+   flex-direction: column;
+   align-items: flex-end;
+}
+
+.content {
+   display: flex;
+   margin-top: 20px;
+}
+
+.leftPanel {
+   flex: 2;
+   padding: 20px;
+}
+
+.centerPanel {
+   flex: 1;
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+   padding: 20px;
+}
+
+.tokenNumber {
+   text-align: center;
+}
+
+.tokenBox {
+   border: 2px solid #ff6600;
+   border-radius: 10px;
+   /* Added rounded corners */
+   font-size: 4em;
+   padding: 20px;
+   margin: 10px 0;
+   font-weight: bold;
+   color: #ff6600;
+}
+
+.servingTime {
+   text-align: center;
+   margin-top: 20px;
+}
+
+.button {
+   background-color: #003366;
+   color: white;
+   border: none;
+   border-radius: 8px;
+   /* Added rounded corners */
+   padding: 15px;
+   font-size: 1em;
+   cursor: pointer;
+   width: 100%;
+}
+
+.footer {
+   margin-top: 20px;
+}
+
+.excellent {
+   color: green;
+   font-weight: bold;
+}
+
+.sideNav {
+   width: 250px;
+   background-color: #f0f0f0;
+   display: flex;
+   flex-direction: column;
+   height: 100vh;
+   border-radius: 10px 0 0 10px;
+   /* Rounded corners on the left side */
+}
+
+.departmentHeader {
+   background-color: #f0f0f0;
+   color: rgb(233, 138, 61);
+   padding: 10px;
+   text-align: center;
+   font-weight: bold;
+   border-radius: 10px 0 0 0;
+   /* Rounded top-left corner */
+}
+
+.queueList {
+   list-style-type: none;
+   padding: 0;
+   margin: 0;
+   overflow-y: auto;
+   flex-grow: 1;
+}
+
+.visitorItem {
+   padding: 10px;
+   border-bottom: 1px solid #ddd;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+}
+
+.visitorInfo {
+   display: flex;
+   flex-direction: column;
+}
+
+.visitorName {
+   font-weight: bold;
+}
+
+.visitorStatus {
+   color: #ff6600;
+}
+
+.visitorActions {
+   display: flex;
+}
+
+.actionButtons {
+   display: flex;
+   justify-content: space-between;
+   padding: 10px;
+}
+
+.actionButton {
+   background-color: #003366;
+   color: white;
+   border: none;
+   border-radius: 6px;
+   /* Added rounded corners */
+   padding: 5px 10px;
+   cursor: pointer;
+   flex-grow: 1;
+   margin: 0 2px;
+}
+
+.addVisitorButton {
+   background-color: #003366;
+   color: white;
+   border: none;
+   border-radius: 0 0 0 10px;
+   /* Rounded bottom-left corner */
+   padding: 10px;
+   cursor: pointer;
+   width: 100%;
+}
