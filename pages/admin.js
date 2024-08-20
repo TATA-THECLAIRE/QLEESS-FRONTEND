@@ -1,73 +1,80 @@
 import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
 import styles from '../styles/Admin.module.css';
 
 export default function AdminPage() {
-  const [servingTime, setServingTime] = useState('00:45:13');
+  const [queueData, setQueueData] = useState([]);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      // Update serving time logic here
-    }, 1000);
-    return () => clearInterval(timer);
+    const fetchQueueData = async () => {
+      const response = await fetch('/api/queue');
+      const data = await response.json();
+      setQueueData(data);
+    };
+
+    fetchQueueData();
+    const intervalId = setInterval(fetchQueueData, 5000);
+
+    return () => clearInterval(intervalId);
   }, []);
+
+  const handleAction = async (id, action) => {
+    await fetch(`/api/queue/${id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action }),
+    });
+
+    setQueueData(queueData.filter(item => item.id !== id));
+  };
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <div className={styles.logo}>
-          <img src="/venus-logo.png" alt="VENUS" />
-        </div>
-        <div className={styles.userInfo}>
-          <div className={styles.userAvatar}></div>
-          <span>Paul Smith</span>
-          <span>Tue, 07 Sep 2023</span>
-          <span>15:08 PM</span>
-        </div>
-      </header>
+      <Head>
+        <title>Admin Dashboard</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
       <main className={styles.main}>
-        <div className={styles.leftPanel}>
-          <h2 className={styles.currentServing}>Current Serving</h2>
-          <h1 className={styles.tokenNumberTitle}>Token Number</h1>
-          <div className={styles.tokenBox}>204</div>
-          <div className={styles.servingTime}>
-            <h3>Serving Time</h3>
-            <div className={styles.timeBox}>{servingTime}</div>
-          </div>
-          <div className={styles.stats}>
-            <div>
-              <span>Total Served Tokens</span>
-              <span className={styles.orange}>10</span>
-            </div>
-            <div>
-              <span>Performance Status</span>
-              <span className={styles.orange}>Excellent</span>
-            </div>
-          </div>
-        </div>
-        <div className={styles.middlePanel}>
-          {['Next', 'Call', 'Recall', 'Transfer', 'Start', 'Close'].map((btn) => (
-            <button key={btn} className={styles.button}>{btn}</button>
-          ))}
-        </div>
-        <div className={styles.rightPanel}>
-          <div className={styles.departmentHeader}>
-            <h3>Department</h3>
-            <div className={styles.counterStatus}>4 counters are serving</div>
-          </div>
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className={styles.departmentRow}>
-              <span>Zhou Zong</span>
-              <div className={styles.statusIndicator}></div>
-            </div>
-          ))}
-          <div className={styles.colorLegend}>
-            <span className={styles.legendItem}><div className={styles.green}></div>Serve1</span>
-            <span className={styles.legendItem}><div className={styles.orange}></div>Serve2</span>
-            <span className={styles.legendItem}><div className={styles.blue}></div>Serve3</span>
-            <span className={styles.legendItem}><div className={styles.red}></div>Serve4</span>
-          </div>
-          <button className={styles.addVisitor}>Add Visitor</button>
+        <h1 className={styles.title}>Admin Dashboard</h1>
+        
+        <div className={styles.queueContainer}>
+          <h2 className={styles.subtitle}>Current Queue</h2>
+          {queueData.length === 0 ? (
+            <p className={styles.emptyQueue}>No customers in queue</p>
+          ) : (
+            queueData.map((item, index) => (
+              <div key={item.id} className={styles.queueItem}>
+                <div className={styles.queueInfo}>
+                  <span className={styles.queueNumber}>{index + 1}</span>
+                  <span className={styles.queueName}>{item.name}</span>
+                  <span className={styles.queueTime}>
+                    {new Date(item.timestamp).toLocaleTimeString()}
+                  </span>
+                </div>
+                <div className={styles.actionButtons}>
+                  <button
+                    className={`${styles.button} ${styles.callButton}`}
+                    onClick={() => handleAction(item.id, 'call')}
+                  >
+                    Call
+                  </button>
+                  <button
+                    className={`${styles.button} ${styles.noShowButton}`}
+                    onClick={() => handleAction(item.id, 'noShow')}
+                  >
+                    No Show
+                  </button>
+                  <button
+                    className={`${styles.button} ${styles.doneButton}`}
+                    onClick={() => handleAction(item.id, 'done')}
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </main>
     </div>

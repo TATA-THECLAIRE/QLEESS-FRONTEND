@@ -1,0 +1,157 @@
+.container {
+   font-family: Arial, sans-serif;
+}
+
+.topBar {
+   background-color: #1a3a6e;
+   color: white;
+   padding: 10px 20px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+}
+
+.topBarLeft a,
+.topBarRight a {
+   color: white;
+   text-decoration: none;
+   margin-right: 15px;
+}
+
+.topBarRight a {
+   font-size: 16px;
+}
+
+.navbar {
+   background-color: white;
+   padding: 15px 20px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+   font-size: 24px;
+   font-weight: bold;
+}
+
+.logo span {
+   color: #4ebbce;
+}
+
+.navLinks a {
+   text-decoration: none;
+   color: #333;
+   margin-left: 20px;
+}
+
+.hero {
+   background-image: url('/queue.jpeg');
+   background-size: cover;
+   background-position: center;
+   height: 500px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   text-align: center;
+   color: white;
+   position: relative;
+}
+
+.heroContent {
+   background-color: rgba(0, 0, 0, 0.5);
+   padding: 20px;
+}
+
+.hero h1 {
+   font-size: 48px;
+   margin-bottom: 10px;
+}
+
+.hero h2 {
+   font-size: 36px;
+   margin-bottom: 20px;
+}
+
+.ctaButton {
+   background-color: #1a3a6e;
+   color: white;
+   padding: 10px 20px;
+   text-decoration: none;
+   font-size: 18px;
+   border-radius: 5px;
+}
+
+.sliderControls {
+   position: absolute;
+   bottom: 20px;
+   left: 50%;
+   transform: translateX(-50%);
+}
+
+.sliderControls button {
+   background-color: #4ebbce;
+   border: none;
+   color: white;
+   padding: 10px 15px;
+   margin: 0 5px;
+   cursor: pointer;
+}
+
+.services {
+   text-align: center;
+   padding: 50px 20px;
+   background-color: #f8f9fa;
+}
+
+.services h3 {
+   color: #4ebbce;
+   font-size: 18px;
+   margin-bottom: 10px;
+}
+
+.services h2 {
+   color: #1a3a6e;
+   font-size: 36px;
+   margin-bottom: 40px;
+}
+
+.serviceGrid {
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+   gap: 30px;
+   max-width: 1200px;
+   margin: 0 auto;
+}
+
+.serviceItem {
+   background-color: white;
+   padding: 30px;
+   border-radius: 10px;
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+   transition: transform 0.3s ease;
+}
+
+.serviceItem:hover {
+   transform: translateY(-5px);
+}
+
+.serviceIcon {
+   background-color: #4ebbce;
+   color: white;
+   width: 60px;
+   height: 60px;
+   border-radius: 50%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin: 0 auto 20px;
+   font-size: 24px;
+}
+
+.serviceItem h4 {
+   color: #1a3a6e;
+   font-size: 18px;
+   margin: 0;
+}

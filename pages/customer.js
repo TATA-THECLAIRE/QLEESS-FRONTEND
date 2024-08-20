@@ -19,7 +19,7 @@ export default function CustomerPage() {
   const fetchQueue = async () => {
     const response = await fetch('/api/queue');
     const data = await response.json();
-    setQueueData(data);
+    setQueueData(data);  
     setCurrentlyServing(data[0]?.number || '000');
   };
 
