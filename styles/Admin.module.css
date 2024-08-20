@@ -1,219 +1,129 @@
 .container {
+   min-height: 100vh;
+   padding: 0 0.5rem;
    display: flex;
    flex-direction: column;
-   height: 100vh;
-   font-family: Arial, sans-serif;
-}
-
-.header {
-   display: flex;
-   justify-content: space-between;
+   justify-content: flex-start;
    align-items: center;
-   padding: 5px 10px;
-   background-color: #003366;
-   color: white;
-}
-
-.logo img {
-   height: 25px;
-}
-
-.userInfo {
-   display: flex;
-   align-items: center;
-   gap: 10px;
-   font-size: 12px;
-}
-
-.userAvatar {
-   width: 25px;
-   height: 25px;
-   background-color: #ccc;
-   border-radius: 50%;
+   background-color: #f4f6f8;
 }
 
 .main {
-   display: flex;
+   width: 100%;
+   max-width: 800px;
+   padding: 2rem 0;
    flex: 1;
-   background-color: #f0f0f0;
-}
-
-.leftPanel {
-   flex: 2;
-   padding: 15px;
-   background-color: white;
    display: flex;
    flex-direction: column;
+   justify-content: flex-start;
+   align-items: center;
 }
 
-.currentServing {
-   color: #ff6600;
-   margin-bottom: 5px;
-   font-size: 18px;
-}
-
-.tokenNumberTitle {
-   color: #003366;
-   margin-bottom: 5px;
-   font-size: 22px;
-}
-
-.tokenBox {
-   font-size: 72px;
-   font-weight: bold;
-   color: #ff6600;
-   border: 2px solid #ff6600;
-   padding: 10px;
+.title {
+   margin: 0 0 2rem 0;
+   line-height: 1.15;
+   font-size: 2.5rem;
    text-align: center;
-   margin-bottom: 15px;
+   color: #333;
 }
 
-.servingTime h3 {
-   color: #003366;
-   margin-bottom: 5px;
-   font-size: 16px;
+.subtitle {
+   font-size: 1.5rem;
+   color: #555;
+   margin-bottom: 1rem;
 }
 
-.timeBox {
-   font-size: 36px;
-   color: #003366;
-   text-align: left;
-   margin-bottom: 15px;
+.queueContainer {
+   width: 100%;
+   background-color: #fff;
+   border-radius: 8px;
+   padding: 1.5rem;
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.stats {
+.emptyQueue {
+   text-align: center;
+   color: #888;
+   font-style: italic;
+}
+
+.queueItem {
+   background-color: #f8f9fa;
+   border-radius: 6px;
+   padding: 1rem;
+   margin-bottom: 1rem;
    display: flex;
    justify-content: space-between;
-   font-size: 14px;
+   align-items: center;
+   transition: all 0.3s ease;
 }
 
-.stats div {
+.queueItem:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.queueInfo {
    display: flex;
-   flex-direction: column;
+   align-items: center;
+   gap: 1rem;
 }
 
-.orange {
-   color: #ff6600;
+.queueNumber {
+   font-size: 1.2rem;
    font-weight: bold;
+   color: #007bff;
+   min-width: 2rem;
+   text-align: center;
 }
 
-.middlePanel {
-   flex: 1;
+.queueName {
+   font-weight: 500;
+   color: #333;
+}
+
+.queueTime {
+   color: #777;
+   font-size: 0.9rem;
+}
+
+.actionButtons {
    display: flex;
-   flex-direction: column;
-   gap: 5px;
-   padding: 5px;
+   gap: 0.5rem;
 }
 
 .button {
-   background-color: #003366;
-   color: white;
+   padding: 0.5rem 1rem;
    border: none;
-   padding: 15px;
+   border-radius: 4px;
    cursor: pointer;
-   font-size: 16px;
+   font-weight: 500;
+   transition: background-color 0.3s ease;
 }
 
-.rightPanel {
-   flex: 1;
-   background-color: white;
-   padding: 15px;
-   display: flex;
-   flex-direction: column;
-}
-
-.departmentHeader {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   margin-bottom: 10px;
-   background-color: #003366;
+.callButton {
+   background-color: #28a745;
    color: white;
-   padding: 5px;
 }
 
-.departmentHeader h3 {
-   margin: 0;
-   font-size: 16px;
+.callButton:hover {
+   background-color: #218838;
 }
 
-.counterStatus {
-   color: #ff6600;
-   font-size: 12px;
-   background-color: white;
-   padding: 2px 5px;
-}
-
-.departmentRow {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   margin-bottom: 5px;
-   font-size: 14px;
-}
-
-.statusIndicator {
-   width: 8px;
-   height: 8px;
-   background-color: #ff6600;
-   border-radius: 50%;
-}
-
-.colorLegend {
-   display: flex;
-   justify-content: space-between;
-   margin-top: auto;
-   margin-bottom: 10px;
-}
-
-.legendItem {
-   display: flex;
-   align-items: center;
-   font-size: 10px;
-}
-
-.green,
-.orange,
-.blue,
-.red {
-   width: 8px;
-   height: 8px;
-   margin-right: 3px;
-}
-
-.green {
-   background-color: green;
-}
-
-.orange {
-   background-color: orange;
-}
-
-.blue {
-   background-color: blue;
-}
-
-.red {
-   background-color: red;
-}
-
-.addVisitor {
-   background-color: #003366;
+.noShowButton {
+   background-color: #dc3545;
    color: white;
-   border: none;
-   padding: 10px;
-   cursor: pointer;
-   font-size: 14px;
 }
 
-@media (max-width: 768px) {
-   .main {
-      flex-direction: column;
-   }
+.noShowButton:hover {
+   background-color: #c82333;
+}
 
-   .leftPanel,
-   .middlePanel,
-   .rightPanel {
-      flex: none;
-   }
+.doneButton {
+   background-color: #17a2b8;
+   color: white;
+}
+
+.doneButton:hover {
+   background-color: #138496;
 }

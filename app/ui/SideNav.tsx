@@ -217,7 +217,7 @@ export default function NAV() {
             href="#"
             className="block rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700"
           >
-            CURRENT QUEUE
+            FLASHQ
           </a>
         </li>
 
