@@ -10,9 +10,9 @@ const LandingPage = () => {
     <div className={styles.container}>
       <div className={styles.topBar}>
         <div className={styles.topBarLeft}>
-          <Link href="#">FAQs</Link>
+          <Link href="/components/faqs">FAQs</Link>
           <Link href="#">Help</Link>
-          <Link href="#">Support</Link>
+          
         </div>
         <div className={styles.topBarRight}>
           <Link href="#"><FontAwesomeIcon icon={['fab', 'facebook-f']} /></Link>
@@ -28,7 +28,7 @@ const LandingPage = () => {
         <div className={styles.navLinks}>
           <Link href="/">Home</Link>
           <Link href="/components/cutomer">join queue</Link>
-          <Link href="#">view queue</Link>
+          <Link href="/components/admin">view queue</Link>
      
           <Link href="#">Contact</Link>
         </div>
@@ -67,12 +67,14 @@ const LandingPage = () => {
             </div>
             <h4>notifications</h4>
           </div>
+            <Link href="/components/faqs">
           <div className={styles.serviceItem}>
             <div className={styles.serviceIcon}>
               <FontAwesomeIcon icon="user-tie" />
             </div>
             <h4>customer support</h4>
-          </div>
+            </div>
+            </Link>
         </div>
         </section>
             <Footer />
