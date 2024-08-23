@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import styles from '../styles/Customer.module.css';
 
+
 export default function CustomerPage() {
   const [queueData, setQueueData] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
@@ -62,16 +63,16 @@ export default function CustomerPage() {
 
       <main className={styles.main}>
         <div className={styles.statusBar}>
-          <span>LTE</span>
+          <span>FLASHQ</span>
           <span>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
         </div>
         <div className={styles.currentQueueTitle}>CURRENT QUEUE</div>
         <div className={styles.content}>
           <div className={styles.queueList}>
             <div className={styles.header}>
-              <span>Upcoming</span>
-              <span>No show</span>
-              <span>Done</span>
+              <span>Number</span>
+              <span>Name</span>
+              <span>Time</span>
             </div>
             {queueData.map((item) => (
               <div key={item.number} className={styles.queueItem}>
@@ -110,6 +111,8 @@ export default function CustomerPage() {
           </div>
         </div>
       )}
+      
+      
     </div>
   );
 }
