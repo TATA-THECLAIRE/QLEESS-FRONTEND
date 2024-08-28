@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import styles from '../styles/Customer.module.css';
+import axios from 'axios';
 
 
 export default function CustomerPage() {
@@ -13,35 +14,48 @@ export default function CustomerPage() {
 
   useEffect(() => {
     fetchQueue();
-    const interval = setInterval(fetchQueue, 5000); // Fetch queue every 5 seconds
-    return () => clearInterval(interval);
+    // const interval = setInterval(fetchQueue, 5000); // Fetch queue every 5 seconds
+    // return () => clearInterval(interval);
   }, []);
 
   const fetchQueue = async () => {
-    const response = await fetch('/api/queue');
-    const data = await response.json();
-    setQueueData(data);  
-    setCurrentlyServing(data[0]?.number || '000');
+    try {
+      const response = await axios.get('http://localhost:4000/customers').then((customers)=>{
+      if (customers.status) {
+        setQueueData(customers.data.posts);
+        console.log("data from backend:: ", customers.data.posts);
+        return customers.json
+      }
+      // log error hereresponse
+    });
+    
+    
+      // setCurrentlyServing(response.data.posts[0]?.number || '000');
+    } catch (error) {
+      console.error('Error fetching queue:', error);
+    }
   };
 
   const addToQueue = async () => {
     if (name && isValidPhoneNumber(phoneNumber)) {
-      const newNumber = String(queueData.length + 1).padStart(3, '0');
-      const newTime = new Date(Date.now() + 30 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const newCustomer = { number: newNumber, name, phoneNumber, time: newTime };
-
-      await fetch('/api/queue', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newCustomer),
-      });
-
-      setShowPopup(false);
-      setName('');
-      setPhoneNumber('');
-      fetchQueue();
+      const newCustomer = {
+        name,
+        number: '',
+        position: 0,
+      };
+  
+      try {
+        const response = await axios.post('http://localhost:4000/customers', newCustomer);
+        const savedCustomer = response.data.customer;
+  
+        setShowPopup(false);
+        setName('');
+        setPhoneNumber('');
+        fetchQueue();
+      } catch (error) {
+        console.error('Error adding to queue:', error);
+        alert(`Error adding to queue: ${error.response.data.error}`);
+      }
     } else {
       alert('Please enter a valid name and phone number.');
     }
@@ -75,10 +89,10 @@ export default function CustomerPage() {
               <span>Time</span>
             </div>
             {queueData.map((item) => (
-              <div key={item.number} className={styles.queueItem}>
-                <span className={styles.tokenNumber}>{item.number}</span>
-                <span className={styles.tokenInfo}>{item.name}</span>
-                <span className={styles.tokenTime}>{item.time}</span>
+              <div key={item.ID} className={styles.queueItem}>
+                <span className={styles.tokenNumber}>{item.Position}</span>
+                <span className={styles.tokenInfo}>{item.Name}</span>
+                <span className={styles.tokenTime}>{item.CreatedAt}</span>
               </div>
             ))}
           </div>
@@ -101,7 +115,7 @@ export default function CustomerPage() {
               onChange={(e) => setName(e.target.value)}
             />
             <input
-              type="tel"
+              type="text"
               placeholder="Phone Number"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
