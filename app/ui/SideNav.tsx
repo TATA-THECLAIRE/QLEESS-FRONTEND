@@ -27,14 +27,6 @@ export default function NAV() {
             </a>
           </li>
 
-          <li>
-            <a
-              href="/components/cusdash"
-              className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-            >
-              Admin
-            </a>
-          </li>
 
           <li>
             <a
@@ -47,7 +39,7 @@ export default function NAV() {
 
           <li>
             <a
-              href="/components/customer"
+              href="/components/cutomer"
               className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
             >
               Join Queue

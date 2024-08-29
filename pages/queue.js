@@ -1,34 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import styles from './QueueManagement.module.css';
+import axios from 'axios';
 
 const QueueManagement = () => {
-  const [tokenNumber, setTokenNumber] = useState(204);
+  const [tokenNumber, setTokenNumber] = useState(0);
   const [servingTime, setServingTime] = useState(0);
-  const [totalServedTokens, setTotalServedTokens] = useState(10);
-  const [currentlyServing, setCurrentlyServing] = useState({ name: 'Paul Smith', number: 204 });
-  const [queueList, setQueueList] = useState([
-    { name: 'LIAM NAZ', status: 'waiting', number: 205 },
-    { name: 'RIAN BONEFASHIO', status: 'waiting', number: 206 },
-    { name: 'ANTAGRASIA SANDOVAL', status: 'waiting', number: 207 },
-    { name: 'BLANCA GERERO', status: 'waiting', number: 208 },
-    { name: 'LA DONA', status: 'waiting', number: 209 },
-    { name: 'LILY CRUZ', status: 'waiting', number: 210 },
-    { name: 'DANNY SIM', status: 'waiting', number: 211 },
-    { name: 'KIARA SNAZ', status: 'waiting', number: 212 },
-    { name: 'DEEP RAJ SING', status: 'waiting', number: 213 },
-    { name: 'SINNA SINCLAIRE', status: 'waiting', number: 214 },
-  ]);
+  const [totalServedTokens, setTotalServedTokens] = useState(0);
+  const [currentlyServing, setCurrentlyServing] = useState({ Name: '', Position: 0 });
+  const [queueList, setQueueList] = useState([]);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+
+  useEffect(() => {
+    fetchQueue();
+    const interval = setInterval(fetchQueue, 5000); // Fetch queue every 5 seconds
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     let timer;
     if (isTimerRunning) {
       timer = setInterval(() => {
-        setServingTime(prevTime => prevTime + 1);
+        setServingTime(prevTime => prevTime + 1); 
       }, 1000);
     }
     return () => clearInterval(timer);
   }, [isTimerRunning]);
+
+  const fetchQueue = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/customers');
+      if (response.status === 200) {
+        const customers = response.data.posts;
+        setQueueList(customers);
+        if (customers.length > 0) {
+          setCurrentlyServing(customers[0]);
+          setTokenNumber(customers[0].Position);
+        }
+        setTotalServedTokens(customers.length);
+      }
+    } catch (error) {
+      console.error('Error fetching queue:', error);
+    }
+  };
 
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
@@ -38,11 +51,11 @@ const QueueManagement = () => {
   };
 
   const handleNext = () => {
-    if (queueList.length > 0) {
-      const nextPerson = queueList[0];
-      setCurrentlyServing(nextPerson);
-      setTokenNumber(nextPerson.number);
-      setQueueList(prevList => prevList.slice(1));
+    if (queueList.length > 1) {
+      const updatedList = [...queueList.slice(1)];
+      setQueueList(updatedList);
+      setCurrentlyServing(updatedList[0]);
+      setTokenNumber(updatedList[0].Position);
       setTotalServedTokens(prev => prev + 1);
       setServingTime(0);
     }
@@ -62,8 +75,8 @@ const QueueManagement = () => {
       <div className={styles.header}>
         <img src="/logo.png" alt="Logo" className={styles.logo} />
         <div className={styles.userInfo}>
-          <span>{currentlyServing.name}</span>
-          <span>17:38 PM</span>
+          <span>{currentlyServing.Name}</span>
+          <span>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
         </div>
       </div>
       <div className={styles.content}>
@@ -91,12 +104,12 @@ const QueueManagement = () => {
         <div className={styles.sideNav}>
           <div className={styles.departmentHeader}>QUEUE</div>
           <ul className={styles.queueList}>
-            {queueList.map((visitor, index) => (
+            {queueList.slice(1).map((visitor, index) => (
               <li key={index} className={styles.visitorItem}>
                 <div className={styles.visitorInfo}>
-                  <span className={styles.visitorName}>{visitor.name}</span>
-                  <span className={styles.visitorNumber}>N-{visitor.number}</span>
-                  <span className={styles.visitorStatus}>{visitor.status}</span>
+                  <span className={styles.visitorName}>{visitor.Name}</span>
+                  <span className={styles.visitorNumber}>N-{visitor.Position}</span>
+                  <span className={styles.visitorStatus}>waiting</span>
                 </div>
                 <div className={styles.visitorActions}>
                   <button className={styles.actionButton}>...</button>

@@ -1,9 +1,7 @@
-// pages/index.js
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import styles from '../styles/Customer.module.css';
 import axios from 'axios';
-
 
 export default function CustomerPage() {
   const [queueData, setQueueData] = useState([]);
@@ -11,26 +9,23 @@ export default function CustomerPage() {
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [currentlyServing, setCurrentlyServing] = useState('000');
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
   useEffect(() => {
     fetchQueue();
-    // const interval = setInterval(fetchQueue, 5000); // Fetch queue every 5 seconds
-    // return () => clearInterval(interval);
+    const timer = setInterval(() => {
+      setCurrentDateTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
   }, []);
 
   const fetchQueue = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/customers').then((customers)=>{
-      if (customers.status) {
-        setQueueData(customers.data.posts);
-        console.log("data from backend:: ", customers.data.posts);
-        return customers.json
+      const response = await axios.get('http://localhost:4000/customers');
+      if (response.status === 200) {
+        setQueueData(response.data.posts);
+        console.log("data from backend:: ", response.data.posts);
       }
-      // log error hereresponse
-    });
-    
-    
-      // setCurrentlyServing(response.data.posts[0]?.number || '000');
     } catch (error) {
       console.error('Error fetching queue:', error);
     }
@@ -40,7 +35,7 @@ export default function CustomerPage() {
     if (name && isValidPhoneNumber(phoneNumber)) {
       const newCustomer = {
         name,
-        number: '',
+        number: phoneNumber,
         position: 0,
       };
   
@@ -54,7 +49,7 @@ export default function CustomerPage() {
         fetchQueue();
       } catch (error) {
         console.error('Error adding to queue:', error);
-        alert(`Error adding to queue: ${error.response.data.error}`);
+        alert(`Error adding to queue: ${error.response?.data?.error || 'Unknown error'}`);
       }
     } else {
       alert('Please enter a valid name and phone number.');
@@ -62,9 +57,20 @@ export default function CustomerPage() {
   };
 
   const isValidPhoneNumber = (number) => {
-    // Cameroon phone number format: +237 6XXXXXXXX or 6XXXXXXXX
     const regex = /^(\+237|0)?6[5-9]\d{7}$/;
     return regex.test(number);
+  };
+
+  const formatDateTime = (date) => {
+    const options = {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    };
+    return date.toLocaleString('en-GB', options).replace(',', ' -');
   };
 
   return (
@@ -78,7 +84,7 @@ export default function CustomerPage() {
       <main className={styles.main}>
         <div className={styles.statusBar}>
           <span>FLASHQ</span>
-          <span>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+          <span suppressHydrationWarning>{formatDateTime(currentDateTime)}</span>
         </div>
         <div className={styles.currentQueueTitle}>CURRENT QUEUE</div>
         <div className={styles.content}>
@@ -92,7 +98,9 @@ export default function CustomerPage() {
               <div key={item.ID} className={styles.queueItem}>
                 <span className={styles.tokenNumber}>{item.Position}</span>
                 <span className={styles.tokenInfo}>{item.Name}</span>
-                <span className={styles.tokenTime}>{item.CreatedAt}</span>
+                <span className={styles.tokenTime} suppressHydrationWarning>
+                  {new Date(item.CreatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                </span>
               </div>
             ))}
           </div>
@@ -100,6 +108,7 @@ export default function CustomerPage() {
             <div className={styles.timer}>CURRENTLY SERVING</div>
             <div className={styles.currentNumber}>{currentlyServing}</div>
             <button className={styles.addToQueueButton} onClick={() => setShowPopup(true)}>Add to Queue</button>
+             <button className={styles.addToQueueButton} onClick={() => setShowPopup(true)}>Leave Queue</button>
           </div>
         </div>
       </main>
@@ -125,8 +134,6 @@ export default function CustomerPage() {
           </div>
         </div>
       )}
-      
-      
     </div>
   );
 }

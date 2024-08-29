@@ -1,80 +1,105 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import styles from '../styles/Admin.module.css';
+import axios from 'axios';
 
 export default function AdminPage() {
   const [queueData, setQueueData] = useState([]);
+  const [currentlyServing, setCurrentlyServing] = useState('000');
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
   useEffect(() => {
-    const fetchQueueData = async () => {
-      const response = await fetch('/api/queue');
-      const data = await response.json();
-      setQueueData(data);
+    fetchQueue();
+    const queueTimer = setInterval(fetchQueue, 5000);
+    const dateTimer = setInterval(() => {
+      setCurrentDateTime(new Date());
+    }, 1000);
+
+    return () => {
+      clearInterval(queueTimer);
+      clearInterval(dateTimer);
     };
-
-    fetchQueueData();
-    const intervalId = setInterval(fetchQueueData, 5000);
-
-    return () => clearInterval(intervalId);
   }, []);
 
-  const handleAction = async (id, action) => {
-    await fetch(`/api/queue/${id}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action }),
-    });
+  const fetchQueue = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/customers');
+      if (response.status === 200) {
+        setQueueData(response.data.posts);
+        console.log("data from backend:: ", response.data.posts);
+      }
+    } catch (error) {
+      console.error('Error fetching queue:', error);
+    }
+  };
 
-    setQueueData(queueData.filter(item => item.id !== id));
+  const formatDateTime = (date) => {
+    const options = {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    };
+    return date.toLocaleString('en-GB', options).replace(',', ' -');
   };
 
   return (
     <div className={styles.container}>
       <Head>
-        <title>Admin Dashboard</title>
+        <title>FlashQ</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Admin Dashboard</h1>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Current Queue</h1>
+          <div className={styles.dateTime} suppressHydrationWarning>
+            {formatDateTime(currentDateTime)}
+          </div>
+        </div>
         
-        <div className={styles.queueContainer}>
-          <h2 className={styles.subtitle}>Current Queue</h2>
-          {queueData.length === 0 ? (
-            <p className={styles.emptyQueue}>No customers in queue</p>
-          ) : (
-            queueData.map((item, index) => (
-              <div key={item.id} className={styles.queueItem}>
-                <div className={styles.queueInfo}>
-                  <span className={styles.queueNumber}>{index + 1}</span>
-                  <span className={styles.queueName}>{item.name}</span>
-                  <span className={styles.queueTime}>
-                    {new Date(item.timestamp).toLocaleTimeString()}
-                  </span>
-                </div>
-                <div className={styles.actionButtons}>
-                  <button
-                    className={`${styles.button} ${styles.callButton}`}
-                    onClick={() => handleAction(item.id, 'call')}
-                  >
-                    Call
-                  </button>
-                  <button
-                    className={`${styles.button} ${styles.noShowButton}`}
-                    onClick={() => handleAction(item.id, 'noShow')}
-                  >
-                    No Show
-                  </button>
-                  <button
-                    className={`${styles.button} ${styles.doneButton}`}
-                    onClick={() => handleAction(item.id, 'done')}
-                  >
-                    Done
-                  </button>
-                </div>
+        <div className={styles.content}>
+          <div className={styles.queueSection}>
+            <h2 className={styles.subtitle}> Queue</h2>
+            <div className={styles.queueList}>
+              <div className={styles.queueHeader}>
+                <span>Position</span>
+                <span>Name</span>
+                <span>Time</span>
               </div>
-            ))
-          )}
+              {queueData.length === 0 ? (
+                <p className={styles.emptyQueue}>No customers in queue</p>
+              ) : (
+                queueData.map((item) => (
+                  <div key={item.ID} className={styles.queueItem}>
+                    <span className={styles.position}>{item.Position}</span>
+                    <span className={styles.name}>{item.Name}</span>
+                    <span className={styles.time} suppressHydrationWarning>
+                      {new Date(item.CreatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+          <div className={styles.statsSection}>
+            <div className={styles.currentlyServing}>
+              <h3>Now Serving</h3>
+              <div className={styles.currentNumber}>{currentlyServing}</div>
+            </div>
+            <div className={styles.queueStats}>
+              <div className={styles.statItem}>
+                <h3>In Queue</h3>
+                <div className={styles.statValue}>{queueData.length}</div>
+              </div>
+              <div className={styles.statItem}>
+                <h3>Avg. Wait Time</h3>
+                <div className={styles.statValue}>12 min</div>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
     </div>
