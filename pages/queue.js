@@ -50,14 +50,37 @@ const QueueManagement = () => {
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
   };
 
-  const handleNext = () => {
-    if (queueList.length > 1) {
-      const updatedList = [...queueList.slice(1)];
-      setQueueList(updatedList);
-      setCurrentlyServing(updatedList[0]);
-      setTokenNumber(updatedList[0].Position);
-      setTotalServedTokens(prev => prev + 1);
-      setServingTime(0);
+  const handleNext = async () => {
+    if (currentlyServing && currentlyServing.Position) {
+      try {
+        const position = currentlyServing.Position; // Get the position of the currently serving customer
+  
+        // Call API to delete the currently serving customer using their position
+        await axios.delete(`http://localhost:4000/customers/delete/${position}`);
+        
+        // Update the queue list by removing the currently serving customer
+        const updatedList = queueList.filter(person => person.Position !== position);
+        setQueueList(updatedList);
+  
+        if (updatedList.length > 0) {
+          // Set the next person in the queue (if any)
+          const nextPerson = updatedList[0];
+          setCurrentlyServing(nextPerson);
+          setTokenNumber(nextPerson.Position);
+        } else {
+          // Reset state if no one is left
+          setCurrentlyServing({ Name: '', Position: 0 });
+          setTokenNumber(0);
+        }
+  
+        // Update served tokens and reset serving time
+        setTotalServedTokens(prev => prev + 1);
+        setServingTime(0);
+      } catch (error) {
+        console.error('Error serving next customer:', error);
+      }
+    } else {
+      console.warn('No currently serving customer found or Position is undefined');
     }
   };
 
@@ -84,7 +107,7 @@ const QueueManagement = () => {
           <h2>Current Serving</h2>
           <div className={styles.tokenNumber}>
             <h3>Token Number</h3>
-            <div className={styles.tokenBox}>{tokenNumber}</div>
+            <div className={styles.tokenBox}>00{tokenNumber}</div>
           </div>
           <div className={styles.servingTime}>
             <h3>Serving Time</h3>
@@ -108,7 +131,7 @@ const QueueManagement = () => {
               <li key={index} className={styles.visitorItem}>
                 <div className={styles.visitorInfo}>
                   <span className={styles.visitorName}>{visitor.Name}</span>
-                  <span className={styles.visitorNumber}>N-{visitor.Position}</span>
+                  <span className={styles.visitorNumber}>00{visitor.Position}</span>
                   <span className={styles.visitorStatus}>waiting</span>
                 </div>
                 <div className={styles.visitorActions}>

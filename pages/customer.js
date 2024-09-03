@@ -38,11 +38,11 @@ export default function CustomerPage() {
         number: phoneNumber,
         position: 0,
       };
-  
+
       try {
         const response = await axios.post('http://localhost:4000/customers', newCustomer);
         const savedCustomer = response.data.customer;
-  
+
         setShowPopup(false);
         setName('');
         setPhoneNumber('');
@@ -60,6 +60,30 @@ export default function CustomerPage() {
     const regex = /^(\+237|0)?6[5-9]\d{7}$/;
     return regex.test(number);
   };
+
+  // const handleLeave = async () => {
+  //   // Ensure there are customers in the queue
+  //   if (queueData.length === 0) {
+  //     console.warn('No customers in the queue.');
+  //     return;
+  //   }
+  
+  //   try {
+  //     // Get the last customer's position
+  //     const lastCustomer = queueData[queueData.length - 1];
+  //     const position = lastCustomer.Position;
+  
+  //     // Call API to delete the customer at the last position
+  //     await axios.delete(`http://localhost:4000/customers/delete/${position}`);
+  
+  //     // // Update the queue list by removing the last customer
+  //     // const updatedList = queueData.slice(0, -1); // Remove the last customer
+  //     // setQueueData(updatedList);
+  
+  //   } catch (error) {
+  //     console.error('Error deleting the last customer:', error);
+  //   }
+  // };
 
   const formatDateTime = (date) => {
     const options = {
@@ -108,7 +132,16 @@ export default function CustomerPage() {
             <div className={styles.timer}>CURRENTLY SERVING</div>
             <div className={styles.currentNumber}>{currentlyServing}</div>
             <button className={styles.addToQueueButton} onClick={() => setShowPopup(true)}>Add to Queue</button>
-             <button className={styles.addToQueueButton} onClick={() => setShowPopup(true)}>Leave Queue</button>
+            <button
+              className={styles.removeFromQueueButton}
+              onClick={() => { window.confirm("Are you sure you want to leave the queue?")
+                // if (window.confirm("Are you sure you want to leave the queue?")) {
+                //   handleLeave(); // Call the existing handleNext function
+                // }
+              }}
+            >
+              Leave Queue
+            </button>
           </div>
         </div>
       </main>

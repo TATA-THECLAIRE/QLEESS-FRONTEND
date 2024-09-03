@@ -132,6 +132,23 @@
   transition: background-color 0.3s;
 }
 
+.removeFromQueueButton {
+  width: 100%;
+  border: none;
+  color: white;
+  padding: 15px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 18px;
+  margin: 20px 0 0;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: 700;
+  background-color: #e4110a;
+  transition: background-color 0.3s;
+}
+
 .addToQueueButton:hover {
   background-color: #4338CA;
 }
